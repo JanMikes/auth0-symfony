@@ -146,6 +146,7 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             ->arg('$service', new Reference('auth0'))
             ->arg('$router', new Reference('router'))
             ->arg('$logger', new Reference('logger'))
+            ->arg('$accessMap', new Reference('security.access_map'))
             ->tag('security.authenticator');
 
         $container->services()
