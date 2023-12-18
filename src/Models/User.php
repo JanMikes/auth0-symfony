@@ -147,7 +147,7 @@ class User implements SymfonyUserInterface, UserInterface
             $response[] = 'ROLE_' . implode('_', explode(':', strtoupper($scope)));
         }
 
-        $response[] = $this->roleAuthenticatedUsing;
+        $response = array_merge($response, $this->roleAuthenticatedUsing);
 
         return array_unique(array_values($response));
     }
