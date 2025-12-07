@@ -10,12 +10,15 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\{RedirectResponse, Request, Response};
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Exception\{AuthenticationException as SymfonyAuthenticationException, CustomUserMessageAuthenticationException};
+use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\{Passport, SelfValidatingPassport};
 use Throwable;
 
+use function in_array;
 use function is_array;
 use function is_string;
 
@@ -32,6 +35,7 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
         public Service $service,
         private RouterInterface $router,
         private LoggerInterface $logger,
+        private AccessMapInterface $accessMap,
     ) {
     }
 
@@ -79,6 +83,11 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
 
     public function supports(Request $request): ?bool
     {
+        [$attributes] = $this->accessMap->getPatterns($request);
+        if (is_array($attributes) && in_array(AuthenticatedVoter::PUBLIC_ACCESS, $attributes, true)) {
+            return null;
+        }
+
         return true;
     }
 }
