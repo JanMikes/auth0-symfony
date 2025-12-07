@@ -58,6 +58,11 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
             $request->getSession()->set('auth0:callback_redirect', $request->getUri());
         }
 
+        [$attributes] = $this->accessMap->getPatterns($request);
+        if (is_array($attributes) && in_array(AuthenticatedVoter::PUBLIC_ACCESS, $attributes, true)) {
+            return null;
+        }
+
         $routes = $this->configuration['routes'] ?? [];
 
         if (! is_array($routes)) {
@@ -83,11 +88,6 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
 
     public function supports(Request $request): ?bool
     {
-        [$attributes] = $this->accessMap->getPatterns($request);
-        if (is_array($attributes) && in_array(AuthenticatedVoter::PUBLIC_ACCESS, $attributes, true)) {
-            return null;
-        }
-
         return true;
     }
 }
