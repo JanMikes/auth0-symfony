@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer install:*)",
+      "Bash(vendor/bin/phpstan analyse:*)",
+      "Bash(composer show:*)",
+      "Bash(composer require:*)",
+      "Bash(composer update:*)",
+      "Bash(git checkout:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
